@@ -1,10 +1,11 @@
-import { Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
 import { ProductsComponent } from './pages/products/products.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { ReportsComponent } from './pages/reports/reports.component';
+import { NgModule } from '@angular/core';
 
-export const routes: Routes = [
+const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   {
     path: 'login',
@@ -26,3 +27,9 @@ export const routes: Routes = [
       ),
   },
 ];
+
+// @NgModule({
+//   imports: [RouterModule.forRoot(routes)],
+//   exports: [RouterModule],
+// })
+export default routes;

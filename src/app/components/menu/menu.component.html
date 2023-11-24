@@ -1,11 +1,20 @@
-<div style="padding: 1rem">
-  <h1>Sidenav</h1>
+<div class="sidenav-body-container">
+  <div class="sidenav-body">
+    <h1>Sidenav</h1>
 
-  <app-menu-link routerLink="/">
-    <span icon>🏠</span>
-
-    <span>Home</span>
-  </app-menu-link>
+    <app-menu-link routerLink="/">
+      <span icon>🏠</span>
+      <span>Home</span>
+    </app-menu-link>
+    <app-menu-link routerLink="/products">
+      <span icon>🏠</span>
+      <span>products</span>
+    </app-menu-link>
+    <app-menu-link routerLink="/reports">
+      <span icon>🏠</span>
+      <span>reports</span>
+    </app-menu-link>
+  </div>
 </div>
 <button
   class="toggle-button"

@@ -1,14 +1,17 @@
-import { Component, importProvidersFrom } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule, RouterOutlet } from '@angular/router';
-import { LoginComponent } from './pages/login/login.component';
+import { Component } from '@angular/core';
 import {
-  BrowserAnimationsModule,
-  provideAnimations,
-} from '@angular/platform-browser/animations';
+  PreloadAllModules,
+  RouterModule,
+  RouterOutlet,
+  provideRouter,
+  withDebugTracing,
+  withPreloading,
+} from '@angular/router';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient } from '@angular/common/http';
-import { MatNativeDateModule } from '@angular/material/core';
 import { MenuComponent } from './components/menu/menu.component';
+import { bootstrapApplication } from '@angular/platform-browser';
+import routes from './app.routes';
 
 @Component({
   selector: 'app-root',
@@ -16,8 +19,16 @@ import { MenuComponent } from './components/menu/menu.component';
   imports: [RouterOutlet, RouterModule, MenuComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  providers: [provideAnimations()],
 })
-export class AppComponent {
-  title = 'inventSystem';
-}
+export class AppComponent {}
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideHttpClient(),
+    provideRouter(
+      routes,
+      withPreloading(PreloadAllModules),
+      withDebugTracing()
+    ),
+  ],
+});
