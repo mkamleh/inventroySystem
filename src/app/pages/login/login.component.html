@@ -1,0 +1,43 @@
+<div class="loginParent">
+  <div class="login">
+    <mat-card-title>Login</mat-card-title>
+    <form [formGroup]="loginForm">
+      <div class="inputParent">
+        <div>Email</div>
+        <input
+          type="text"
+          matInput
+          formControlName="email"
+          placeholder="Ex. mk123@example.com"
+          class="loginInput"
+        />
+        <div>
+          <mat-error>{{ checkForErrorsIn(loginForm.get("email")) }}</mat-error>
+        </div>
+      </div>
+
+      <div class="inputParent">
+        <div>Password</div>
+        <input
+          type="password"
+          matInput
+          formControlName="password"
+          class="loginInput"
+        />
+        <div>
+          <mat-error>{{
+            checkForErrorsIn(loginForm.get("password"))
+          }}</mat-error>
+        </div>
+      </div>
+
+      <button
+        class="loginButton"
+        (click)="submit()"
+        [disabled]="loginForm.status === 'INVALID'"
+      >
+        Login
+      </button>
+    </form>
+  </div>
+</div>
