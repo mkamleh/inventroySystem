@@ -26,6 +26,13 @@ const routes: Routes = [
         (m) => m.ReportsComponent
       ),
   },
+  {
+    path: 'customer-items',
+    loadComponent: () =>
+      import('./pages/customer-items/customer-item.component').then(
+        (m) => m.CustomerItems
+      ),
+  },
 ];
 
 // @NgModule({

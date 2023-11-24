@@ -1,0 +1,36 @@
+.card {
+  width: 48%;
+  display: inline-block;
+  background-color: red;
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+
+.example-header-image {
+  background-image: url("https://material.angular.io/assets/img/examples/shiba1.jpg");
+  background-size: cover;
+}
+
+.quantity {
+  width: 20%;
+  background-color: white;
+}
+.quantityButton {
+  font-size: 20px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.checkoutButton {
+  position: fixed;
+  bottom: 20px;
+}

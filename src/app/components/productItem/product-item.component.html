@@ -1,0 +1,12 @@
+<div class="itemContaniner">
+  <div>{{ item.name }}</div>
+  <div>{{ item.price }}</div>
+  <div>{{ item.stock }}</div>
+  <div>{{ item.category }}</div>
+  <div class="actionButton deleteButton" (click)="deleteItem(item.id)">
+    delete
+  </div>
+  <div class="actionButton updateButton" (click)="updateItem(item.id)">
+    update
+  </div>
+</div>

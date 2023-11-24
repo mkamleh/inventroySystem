@@ -1,0 +1,37 @@
+<div class="formParent">
+  <div [formGroup]="searchForm">
+    <div *ngFor="let field of formFields" class="inputParent">
+      <div>{{ field.name }}</div>
+      <input
+        type="text"
+        matInput
+        formControlName="{{ field.controlName }}"
+        placeholder="{{ field.name }}"
+        class="loginInput"
+        value="field.value"
+      />
+      <div>
+        <mat-error>{{
+          checkForErrorsIn(searchForm.get(field.controlName))
+        }}</mat-error>
+      </div>
+    </div>
+
+    <button
+      *ngIf="data"
+      class="loginButton"
+      [disabled]="searchForm.status === 'INVALID'"
+      (click)="updateItem()"
+    >
+      update
+    </button>
+    <button
+      *ngIf="!data"
+      class="loginButton"
+      [disabled]="searchForm.status === 'INVALID'"
+      (click)="addItem()"
+    >
+      add
+    </button>
+  </div>
+</div>
