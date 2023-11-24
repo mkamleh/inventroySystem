@@ -1,0 +1,51 @@
+:host {
+  height: 100vh;
+  width: var(--sidenav-collapsed-width);
+  &.is-expanded {
+    width: var(--sidenav-width);
+  }
+
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  background-color: rgb(237, 241, 243);
+  border-right: 2px solid rgb(192, 192, 192);
+}
+
+.toggle-button {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 25px;
+  height: 25px;
+  margin: 0;
+  padding: 0;
+
+  position: absolute;
+  top: 48px;
+  right: calc(25px / -2) - 2px;
+
+  border: 1px solid gray;
+  border-radius: 50%;
+
+  background-color: white;
+
+  cursor: pointer;
+
+  &:hover {
+    border: 2px solid rgb(36, 82, 231);
+  }
+
+  &.is-flipped {
+    transform: rotate(-180deg);
+  }
+
+  mat-icon {
+    font-size: 1.5em;
+
+    width: fit-content;
+    height: fit-content;
+  }
+}

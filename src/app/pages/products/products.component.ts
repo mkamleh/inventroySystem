@@ -17,14 +17,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   standalone: true,
   imports: [
     CommonModule,
-    RouterOutlet,
     ReactiveFormsModule,
     MatCardModule,
     MatButtonModule,
     MatFormFieldModule,
   ],
   templateUrl: './products.component.html',
-  styleUrl: './products.component.css',
+  styleUrl: './products.component.scss',
 })
 export class ProductsComponent {
   // loginForm = new FormGroup({

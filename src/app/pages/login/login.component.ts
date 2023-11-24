@@ -11,20 +11,21 @@ import { RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MenuComponent } from '../../components/menu/menu.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     CommonModule,
-    RouterOutlet,
     ReactiveFormsModule,
     MatCardModule,
     MatButtonModule,
     MatFormFieldModule,
+    MenuComponent,
   ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  styleUrl: './login.component.scss',
 })
 export class LoginComponent {
   loginForm = new FormGroup({

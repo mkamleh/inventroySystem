@@ -5,8 +5,12 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
 import { ReportsComponent } from './pages/reports/reports.component';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./pages/login/login.component').then((m) => m.LoginComponent),
+  },
   {
     path: 'products',
     loadComponent: () =>
@@ -14,6 +18,11 @@ export const routes: Routes = [
         (m) => m.ProductsComponent
       ),
   },
-  //   { path: 'products', component: ProductsComponent },
-  { path: 'reports', component: ReportsComponent },
+  {
+    path: 'reports',
+    loadComponent: () =>
+      import('./pages/reports/reports.component').then(
+        (m) => m.ReportsComponent
+      ),
+  },
 ];
