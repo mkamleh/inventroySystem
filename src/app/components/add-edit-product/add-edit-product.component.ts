@@ -13,6 +13,14 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { Item } from '../productItem/product-item.component';
+import {
+  HttpClient,
+  HttpClientModule,
+  HttpHeaders,
+} from '@angular/common/http';
+import { AuthService } from '../../auth/auth.server';
+import Swal from 'sweetalert2';
+import { errorsHandling } from '../../HttpClient/errorHandler';
 
 @Component({
   selector: 'app-add-edit-product',
@@ -25,6 +33,7 @@ import { Item } from '../productItem/product-item.component';
     MatCardModule,
     MatButtonModule,
     MatFormFieldModule,
+    HttpClientModule,
   ],
 
   templateUrl: './add-edit-product.component.html',
@@ -47,6 +56,8 @@ export class AddEditProductComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<AddEditProductComponent>,
+    private httpClient: HttpClient,
+    private authService: AuthService,
     @Inject(MAT_DIALOG_DATA) public data: { item: Item }
   ) {}
 
@@ -79,11 +90,68 @@ export class AddEditProductComponent implements OnInit {
   submit() {}
 
   updateItem() {
-    console.log('update');
-    this.dialogRef.close();
+    let headers = new HttpHeaders();
+    headers = headers.set(
+      'Authorization',
+      `Bearer ${this.authService.getData().token}`
+    );
+
+    const body = {
+      id: this.data.item.id,
+      price: Number(this.searchForm.value.price) || 'wronge',
+      category: this.searchForm.value.category,
+      stock: Number(this.searchForm.value.stock) || 'wronge',
+      name: this.searchForm.value.category,
+    };
+    this.httpClient
+      .patch('http://localhost:3000/product', body, { headers })
+      .subscribe(
+        (res: any) => {
+          this.dialogRef.close();
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'done',
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        },
+        (error) => {
+          console.log(error);
+          errorsHandling(error);
+        }
+      );
   }
   addItem() {
-    console.log('add');
-    this.dialogRef.close();
+    let headers = new HttpHeaders();
+    headers = headers.set(
+      'Authorization',
+      `Bearer ${this.authService.getData().token}`
+    );
+
+    const body = {
+      price: Number(this.searchForm.value.price) || 'wronge',
+      category: this.searchForm.value.category,
+      stock: Number(this.searchForm.value.stock) || 'wronge',
+      name: this.searchForm.value.category,
+    };
+    this.httpClient
+      .post('http://localhost:3000/product', body, { headers })
+      .subscribe(
+        (res: any) => {
+          this.dialogRef.close();
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'done',
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        },
+        (error) => {
+          console.log(error);
+          errorsHandling(error);
+        }
+      );
   }
 }

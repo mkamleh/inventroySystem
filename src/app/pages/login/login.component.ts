@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -7,11 +7,15 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MenuComponent } from '../../components/menu/menu.component';
+import { HttpClient } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
+import { AuthService } from '../../auth/auth.server';
 
 @Component({
   selector: 'app-login',
@@ -27,11 +31,18 @@ import { MenuComponent } from '../../components/menu/menu.component';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+  constructor(
+    private httpClient: HttpClient,
+    private authService: AuthService,
+    private router: Router
+  ) {}
+  ngOnInit(): void {}
+
   loginForm = new FormGroup({
     email: new FormControl('', [
       Validators.required,
-      Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'),
+      Validators.pattern('^[a-zA-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}$'),
     ]),
     password: new FormControl('', [
       Validators.required,
@@ -70,6 +81,41 @@ export class LoginComponent {
 
   submit() {
     console.log(this.loginForm);
+    const body = {
+      username: this.loginForm.value.email,
+      password: this.loginForm.value.password,
+    };
+    this.httpClient.post('http://localhost:3000/auth/login', body).subscribe(
+      (res: any) => {
+        console.log(res);
+        this.authService.setData(res.access_token, res.userType);
+        res.userType.includes('manager')
+          ? this.router.navigate(['/products'])
+          : this.router.navigate(['/customer-items']);
+      },
+      (error) => {
+        console.log(error);
+        if (Array.isArray(error.error.message)) {
+          error.error.message.forEach((msg: string) => {
+            Swal.fire({
+              position: 'top-end',
+              icon: 'error',
+              title: msg,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          });
+        } else {
+          Swal.fire({
+            position: 'top-end',
+            icon: 'error',
+            title: error.error.message,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+      }
+    );
   }
   //   @Output() submitEM = new EventEmitter();
 }

@@ -1,22 +1,21 @@
 <div class="sidenav-body-container">
   <div class="sidenav-body">
     <h1>NardSoft</h1>
-
-    <app-menu-link routerLink="/">
-      <span icon>🏠</span>
-      <span>Home</span>
-    </app-menu-link>
-    <app-menu-link routerLink="/products">
+    <app-menu-link *ngIf="manager" routerLink="/products">
       <span icon>🏠</span>
       <span>products</span>
     </app-menu-link>
-    <app-menu-link routerLink="/reports">
+    <app-menu-link *ngIf="admin" routerLink="/reports">
       <span icon>🏠</span>
       <span>reports</span>
     </app-menu-link>
-    <app-menu-link routerLink="/customer-items">
+    <app-menu-link *ngIf="user" routerLink="/customer-items">
       <span icon>🏠</span>
       <span>items</span>
+    </app-menu-link>
+    <app-menu-link (click)="signout()" *ngIf="token">
+      <span icon>🏠</span>
+      <span>signout</span>
     </app-menu-link>
   </div>
 </div>

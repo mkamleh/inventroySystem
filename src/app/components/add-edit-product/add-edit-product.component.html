@@ -1,7 +1,7 @@
 <div class="formParent">
   <div [formGroup]="searchForm">
     <div *ngFor="let field of formFields" class="inputParent">
-      <div>{{ field.name }}</div>
+      <div class="fieldLabel">{{ field.name }}</div>
       <input
         type="text"
         matInput

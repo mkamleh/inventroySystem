@@ -32,19 +32,19 @@
   >
     add
   </button>
-
-  <div
-    *ngFor="
-      let item of collection
-        | paginate : { itemsPerPage: 50, currentPage: p, totalItems: 100 }
-    "
-  >
-    <app-product-item
-      [item]="item"
-      (deleteItemEvent)="deleteItem($event)"
-      (updateItemEvent)="updateItem($event)"
-    ></app-product-item>
-  </div>
-
-  <pagination-controls (pageChange)="p = $event"></pagination-controls>
 </div>
+
+<div
+  *ngFor="
+    let item of collection
+      | paginate : { itemsPerPage: 20, currentPage: p, totalItems: totalItems }
+  "
+>
+  <app-product-item
+    [item]="item"
+    (deleteItemEvent)="deleteItem($event)"
+    (updateItemEvent)="updateItem($event)"
+  ></app-product-item>
+</div>
+
+<pagination-controls (pageChange)="p = $event"></pagination-controls>
