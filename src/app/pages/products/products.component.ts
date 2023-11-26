@@ -126,7 +126,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
         console.log(res);
         this.collection = res.data;
         this.collection.unshift({
-          id: 'nun',
+          id: '-1',
           name: 'name',
           stock: 'stock',
           price: 'price',

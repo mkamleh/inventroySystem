@@ -21,9 +21,16 @@ export class ProductItemComponent {
   @Output() updateItemEvent = new EventEmitter<string>();
 
   deleteItem(id: string) {
+    if (id === '-1') {
+      return;
+    }
     this.deleteItemEvent.emit(id);
   }
   updateItem(id: string) {
+    if (id === '-1') {
+      return;
+    }
+
     this.updateItemEvent.emit(id);
   }
 }
