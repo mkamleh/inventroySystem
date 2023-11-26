@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -11,6 +11,9 @@ import { RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { errorsHandling } from '../../HttpClient/errorHandler';
+import { AuthService } from '../../auth/auth.server';
 
 @Component({
   selector: 'app-reports',
@@ -25,45 +28,39 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.scss',
 })
-export class ReportsComponent {
-  // loginForm = new FormGroup({
-  //   email: new FormControl('', [
-  //     Validators.required,
-  //     Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'),
-  //   ]),
-  //   password: new FormControl('', [
-  //     Validators.required,
-  //     Validators.minLength(8),
-  //   ]),
-  // });
-  // checkForErrorsIn(
-  //   formControl: AbstractControl<string | null, string | null> | null
-  // ): string {
-  //   if (
-  //     formControl &&
-  //     (formControl.dirty || formControl.touched) &&
-  //     formControl.hasError('required')
-  //   ) {
-  //     return 'value is required';
-  //   }
-  //   if (
-  //     formControl &&
-  //     (formControl.dirty || formControl.touched) &&
-  //     formControl.hasError('pattern')
-  //   ) {
-  //     return 'must be email';
-  //   }
-  //   if (
-  //     formControl &&
-  //     (formControl.dirty || formControl.touched) &&
-  //     formControl.hasError('minlength')
-  //   ) {
-  //     return 'must be atleast 8 characters';
-  //   }
-  //   return '';
-  // }
-  // submit() {
-  //   console.log(this.loginForm);
-  // }
-  //   @Output() submitEM = new EventEmitter();
+export class ReportsComponent implements OnInit {
+  collection: any;
+  constructor(
+    private httpClient: HttpClient,
+    private authService: AuthService
+  ) {}
+  ngOnInit(): void {
+    this.loadItems();
+  }
+
+  loadItems() {
+    let headers = new HttpHeaders();
+    headers = headers.set(
+      'Authorization',
+      `Bearer ${this.authService.getData().token}`
+    );
+
+    this.httpClient
+      .get('http://localhost:3000/transactions', { headers })
+      .subscribe(
+        (res: any) => {
+          console.log(res);
+          this.collection = res;
+          this.collection.unshift({
+            id: 'id',
+            amount: 'total amount',
+            totalItems: 'total items sold',
+          });
+        },
+        (error) => {
+          console.log(error);
+          errorsHandling(error);
+        }
+      );
+  }
 }

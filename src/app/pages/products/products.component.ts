@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -17,15 +24,7 @@ import {
   ProductItemComponent,
 } from '../../components/productItem/product-item.component';
 import Swal from 'sweetalert2';
-import {
-  MatDialog,
-  MAT_DIALOG_DATA,
-  MatDialogRef,
-  MatDialogTitle,
-  MatDialogContent,
-  MatDialogActions,
-  MatDialogClose,
-} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { AddEditProductComponent } from '../../components/add-edit-product/add-edit-product.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../auth/auth.server';
@@ -47,7 +46,7 @@ import { io } from 'socket.io-client';
   templateUrl: './products.component.html',
   styleUrl: './products.component.scss',
 })
-export class ProductsComponent implements OnInit {
+export class ProductsComponent implements OnInit, OnDestroy {
   collection: Item[] = [];
   p: number = 1;
   socket: any;
@@ -83,6 +82,13 @@ export class ProductsComponent implements OnInit {
     this.socket.on('test', (res: any) => {
       console.log(res);
       this.collection = res.data;
+      this.collection.unshift({
+        id: 'nun',
+        name: 'name',
+        stock: 'stock',
+        price: 'price',
+        category: 'category',
+      });
       this.totalItems = res.meta.totalPages;
       this.p = res.meta.currentPage;
     });
@@ -119,11 +125,19 @@ export class ProductsComponent implements OnInit {
       (res: any) => {
         console.log(res);
         this.collection = res.data;
+        this.collection.unshift({
+          id: 'nun',
+          name: 'name',
+          stock: 'stock',
+          price: 'price',
+          category: 'category',
+        });
         this.totalItems = res.meta.totalPages;
         this.p = res.meta.currentPage;
       },
       (error) => {
         console.log(error);
+        errorsHandling(error);
       }
     );
   }
@@ -223,5 +237,9 @@ export class ProductsComponent implements OnInit {
       console.log('The dialog was closed');
       // this.animal = result;
     });
+  }
+
+  ngOnDestroy() {
+    this.socket.disconnect();
   }
 }

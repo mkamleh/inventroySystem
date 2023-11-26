@@ -15,6 +15,11 @@ import { MenuComponent } from '../../components/menu/menu.component';
 import { Item } from '../../components/productItem/product-item.component';
 import { CartService } from './cart.service';
 import { Observable } from 'rxjs';
+import { AuthService } from '../../auth/auth.server';
+import { Socket, io } from 'socket.io-client';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { errorsHandling } from '../../HttpClient/errorHandler';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-customer-item',
@@ -33,30 +38,32 @@ import { Observable } from 'rxjs';
 export class CustomerItems implements OnInit {
   cartTotalObservable: Observable<number> = this.cart.returnTotal();
   cartTotal: number = 0;
-  constructor(public cart: CartService) {}
+  socket: Socket;
+  collection: (Item & { quantity: number })[];
+  constructor(
+    public cart: CartService,
+    private authService: AuthService,
+    private httpClient: HttpClient
+  ) {}
+
   ngOnInit(): void {
     this.cartTotalObservable.subscribe((total) => {
       this.cartTotal = total;
     });
+
+    this.loadItems();
+    this.socket = io('http://localhost:3000/test', {
+      extraHeaders: {
+        authorization: `Bearer ${this.authService.getData().token}`,
+      },
+    });
+    this.socket.on('test', (res: any) => {
+      this.collection = res.data;
+      this.collection.forEach((element) => {
+        element.quantity = 0;
+      });
+    });
   }
-  collection: (Item & { quantity: number })[] = [
-    {
-      id: '1',
-      name: 'milk',
-      price: '3',
-      category: 'diary',
-      stock: '10',
-      quantity: 0,
-    },
-    {
-      id: '2',
-      name: 'kitmat',
-      price: '9',
-      category: 'candy',
-      stock: '5',
-      quantity: 0,
-    },
-  ];
 
   changeQuantity(action: 'add' | 'sub', index: number) {
     if (
@@ -73,7 +80,65 @@ export class CustomerItems implements OnInit {
   }
 
   addToCart(index: number) {
-    this.cart.addItemToCart(this.collection[index]);
+    this.cart.addItemToCart({ ...this.collection[index] });
     this.collection[index].quantity = 0;
+  }
+
+  loadItems() {
+    let headers = new HttpHeaders();
+    headers = headers.set(
+      'Authorization',
+      `Bearer ${this.authService.getData().token}`
+    );
+    this.httpClient.get('http://localhost:3000/product', { headers }).subscribe(
+      (res: any) => {
+        this.collection = res.data;
+        this.collection.forEach((element) => {
+          element.quantity = 0;
+        });
+      },
+      (error) => {
+        console.log(error);
+        errorsHandling(error);
+      }
+    );
+  }
+
+  checkout() {
+    let headers = new HttpHeaders();
+    headers = headers.set(
+      'Authorization',
+      `Bearer ${this.authService.getData().token}`
+    );
+
+    const body = {
+      amount: this.cartTotal,
+      products: this.cart.returnCart(),
+    };
+
+    this.httpClient
+      .post('http://localhost:3000/transactions', body, {
+        headers,
+      })
+      .subscribe(
+        (res: any) => {
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'done',
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          this.cart.resetCart();
+        },
+        (error) => {
+          console.log(error);
+          errorsHandling(error);
+        }
+      );
+  }
+
+  ngOnDestroy() {
+    this.socket.disconnect();
   }
 }

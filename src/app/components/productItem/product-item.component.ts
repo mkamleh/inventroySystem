@@ -6,13 +6,6 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 @Component({

@@ -1,1 +1,5 @@
-<div>working reports</div>
+<div *ngFor="let item of collection" class="transCountainer">
+  <div>{{ item.id }}</div>
+  <div>{{ item.amount }}</div>
+  <div>{{ item.totalItems }}</div>
+</div>
